@@ -9,12 +9,11 @@ import br.com.alura.adopet.api.model.TipoPet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class CalculadoraProbabilidadeAdocaoTest {
 
     @Test
-    void cenario01(){
+    void deveriaRetornarProbabilidadeAltaParaPetComIdadeBaixaPesoBaixo(){
         //idade 4 anos e 4kg - ALTA
 
         Abrigo abrigo = new Abrigo(new CadastroAbrigoDto(
@@ -38,7 +37,7 @@ class CalculadoraProbabilidadeAdocaoTest {
     }
 
     @Test
-    void cenario02(){
+    void deveriaRetornarProbabilidadeMediaParaPetComIdadeAltaPesoBaixo(){
         //idade 15 anos e 4kg - MEDIA
 
         Abrigo abrigo = new Abrigo(new CadastroAbrigoDto(
