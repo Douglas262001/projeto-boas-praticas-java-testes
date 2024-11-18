@@ -9,16 +9,18 @@ import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
 import br.com.alura.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,17 +55,28 @@ class AdocaoServiceTest {
 
     private SolicitacaoAdocaoDto dto;
 
+    @Captor
+    private ArgumentCaptor<Adocao> adocaoArgumentCaptor;
+
     @Test
     void deveriaSalvarAdocaoAoSolicitar() {
+        //ARRANGE
+        this.dto = new SolicitacaoAdocaoDto(10l, 20l, "motivo qualquer");
+        given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+        given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+        given(pet.getAbrigo()).willReturn(abrigo);
+
         //ACT
         service.solicitar(dto);
 
         //ASSERT
-        then(petRepository).should().save(any());
+        then(repository).should().save(adocaoArgumentCaptor.capture());
 
-        Adocao adocao = new Adocao ( null, null, null);
+        Adocao adocaoSalva = adocaoArgumentCaptor.getValue();
 
-        repository.save(adocao);
+        Assertions.assertEquals(pet, adocaoSalva.getPet());
+        Assertions.assertEquals(tutor, adocaoSalva.getTutor());
+        Assertions.assertEquals(dto.motivo(), adocaoSalva.getMotivo());
     }
 
 }
